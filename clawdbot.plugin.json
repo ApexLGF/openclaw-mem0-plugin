@@ -1,5 +1,5 @@
 {
-  "id": "clawdbot-mem0",
+  "id": "clawdbot-mem0-plugin",
   "description": "OpenClaw memory plugin using mem0",
   "homepage": "https://github.com/xRay2016/openclaw-mem0",
   "kind": "memory",
