@@ -22,7 +22,7 @@
 通过 OpenClaw CLI 安装（npm 源）：
 
 ```bash
-openclaw plugins install @xray2016/openclaw-mem0-plugin
+openclaw plugins install @apexlgf/openclaw-mem0-plugin
 ```
 
 ## 配置

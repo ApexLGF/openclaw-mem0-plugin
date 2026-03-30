@@ -24,7 +24,7 @@ This is an OpenClaw plugin that integrates with [Mem0](https://github.com/mem0ai
 Install via OpenClaw CLI (npm registry):
 
 ```bash
-openclaw plugins install @xray2016/openclaw-mem0-plugin
+openclaw plugins install @apexlgf/openclaw-mem0-plugin
 ```
 
 ## Configuration
