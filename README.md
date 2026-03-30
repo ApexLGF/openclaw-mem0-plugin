@@ -63,7 +63,7 @@ For Volcengine (火山引擎) hosted Mem0 instances, just set the `host` to your
 }
 ```
 
-> **Note**: Volcengine API processes memory writes asynchronously. Auto-capture uses fire-and-forget mode (non-blocking), while explicit tool calls like `memory_store` use `addAndWait` to poll until completion.
+> **Note**: Volcengine API processes memory writes asynchronously. All writes (including auto-capture and `memory_store`) use fire-and-forget mode — the tool returns immediately while the memory is queued for processing (~2-3 minutes). Use `addAndWait()` programmatically if you need confirmation before proceeding.
 
 ### Multi-Agent Memory Isolation
 

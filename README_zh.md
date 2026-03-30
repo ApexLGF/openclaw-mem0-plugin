@@ -61,7 +61,7 @@ openclaw plugins install @apexlgf/openclaw-mem0-plugin
 }
 ```
 
-> **注意**：火山引擎 API 以异步方式处理记忆写入。自动捕获采用 fire-and-forget 模式（非阻塞），而显式工具调用如 `memory_store` 使用 `addAndWait` 轮询直到完成。
+> **注意**：火山引擎 API 以异步方式处理记忆写入。所有写入（包括自动捕获和 `memory_store`）均采用 fire-and-forget 模式 — 工具立即返回，记忆在后台排队处理（约 2-3 分钟）。如需等待确认写入完成，可在代码中使用 `addAndWait()` 方法。
 
 ### 多 Agent 记忆隔离
 
