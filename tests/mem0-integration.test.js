@@ -1,4 +1,4 @@
-import { MemoryClient } from '../lib/mem0.js';
+import { MemoryClient } from '../lib/mem0.ts';
 import dotenv from 'dotenv';
 import { join } from 'path';
 import { homedir } from 'os';

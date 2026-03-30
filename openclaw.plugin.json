@@ -75,6 +75,10 @@
       "label": "Open-Source Configuration",
       "advanced": true,
       "help": "Optional. Configure custom embedder, vector store, LLM, or history DB for open-source mode. Has sensible defaults — only override what you need."
+    },
+    "agentIsolation": {
+      "label": "Agent Isolation",
+      "help": "Enable per-agent memory isolation. When enabled, each agent gets its own private memory namespace (agent_{id}_private) with access to a shared pool (pool_shared). Default: false (backwards compatible)."
     }
   },
   "configSchema": {
@@ -130,6 +134,9 @@
       },
       "topK": {
         "type": "number"
+      },
+      "agentIsolation": {
+        "type": "boolean"
       },
       "oss": {
         "type": "object",

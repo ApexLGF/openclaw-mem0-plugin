@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { MemoryClient } from '../lib/mem0.js';
+import { MemoryClient } from '../lib/mem0.ts';
 
 // Mock fetch
 global.fetch = jest.fn();
