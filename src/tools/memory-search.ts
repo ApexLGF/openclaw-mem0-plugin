@@ -14,7 +14,8 @@ export function registerMemorySearch(
       name: "memory_search",
       label: "Memory Search",
       description:
-        "Search through long-term memories stored in Mem0. Use when you need context about user preferences, past decisions, or previously discussed topics.",
+        "Search through long-term memories stored in Mem0. Use when you need context about user preferences, past decisions, or previously discussed topics. " +
+        "When agent isolation is enabled, searches automatically include both your private memories AND shared memories accessible to all agents.",
       parameters: Type.Object({
         query: Type.String({ description: "Search query" }),
         limit: Type.Optional(

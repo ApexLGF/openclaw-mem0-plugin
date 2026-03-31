@@ -25,6 +25,7 @@ export type Mem0Config = {
   searchThreshold: number;
   topK: number;
   agentIsolation: boolean;
+  systemMemoryFile?: string;
 };
 
 export interface AddOptions {

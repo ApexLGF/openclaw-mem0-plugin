@@ -34,15 +34,21 @@ export class NamespaceManager {
   }
 
   /**
-   * Get the user_ids to search for an agent (private + shared).
-   * When no agentId, falls back to base userId only.
+   * Get the user_ids to search for an agent (private + shared + system).
+   * When no agentId, falls back to base userId + system.
    */
-  getSearchUserIds(agentId?: string): string[] {
-    if (!agentId) return [this.baseUserId];
-    return [
-      this.getUserId(Namespace.PRIVATE, agentId),
-      this.getUserId(Namespace.SHARED),
-    ];
+  getSearchUserIds(agentId?: string, includeSystem = false): string[] {
+    const ids: string[] = [];
+    if (agentId) {
+      ids.push(this.getUserId(Namespace.PRIVATE, agentId));
+      ids.push(this.getUserId(Namespace.SHARED));
+    } else {
+      ids.push(this.baseUserId);
+    }
+    if (includeSystem) {
+      ids.push(this.getUserId(Namespace.SYSTEM));
+    }
+    return ids;
   }
 
   /**

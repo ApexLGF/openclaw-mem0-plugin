@@ -135,6 +135,7 @@ const ALLOWED_KEYS = [
   "topK",
   "oss",
   "agentIsolation",
+  "systemMemoryFile",
 ];
 
 function assertAllowedKeys(
@@ -203,6 +204,10 @@ export const mem0ConfigSchema = {
         typeof cfg.searchThreshold === "number" ? cfg.searchThreshold : 0.5,
       topK: typeof cfg.topK === "number" ? cfg.topK : 5,
       agentIsolation: cfg.agentIsolation === true,
+      systemMemoryFile:
+        typeof cfg.systemMemoryFile === "string" && cfg.systemMemoryFile
+          ? cfg.systemMemoryFile
+          : undefined,
       oss: ossConfig,
     };
   },

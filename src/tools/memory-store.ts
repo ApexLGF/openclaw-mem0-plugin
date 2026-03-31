@@ -2,6 +2,7 @@ import { Type } from "@sinclair/typebox";
 import type { OpenClawPluginApi } from "openclaw/plugin-sdk";
 import type { Mem0Config, Mem0Provider, PluginState } from "../types.js";
 import { buildAddOptions } from "../helpers.js";
+import { Namespace } from "../namespace.js";
 
 export function registerMemoryStore(
   api: OpenClawPluginApi,
@@ -14,7 +15,10 @@ export function registerMemoryStore(
       name: "memory_store",
       label: "Memory Store",
       description:
-        "Save important information in long-term memory via Mem0. Use for preferences, facts, decisions, and anything worth remembering.",
+        "Save important information in long-term memory via Mem0. Use for preferences, facts, decisions, and anything worth remembering. " +
+        "When agent isolation is enabled, memories are private to the current agent by default. " +
+        'Use scope "shared" for knowledge that ALL agents should access — e.g. user profile, company facts, cross-team decisions, or shared context. ' +
+        'Use scope "private" (default) for agent-specific notes, working context, or domain-specific preferences.',
       parameters: Type.Object({
         text: Type.String({ description: "Information to remember" }),
         userId: Type.Optional(
@@ -33,19 +37,35 @@ export function registerMemoryStore(
               "Store as long-term (user-scoped) memory. Default: true. Set to false for session-scoped memory.",
           }),
         ),
+        scope: Type.Optional(
+          Type.Union([
+            Type.Literal("private"),
+            Type.Literal("shared"),
+          ], {
+            description:
+              'Memory visibility scope (only effective when agent isolation is enabled). ' +
+              '"private" (default): only this agent can see it. ' +
+              '"shared": all agents can see it — use for user preferences, company knowledge, cross-agent decisions.',
+          }),
+        ),
       }),
       async execute(_toolCallId, params) {
-        const { text, userId, longTerm = true } = params as {
+        const { text, userId, longTerm = true, scope = "private" } = params as {
           text: string;
           userId?: string;
           metadata?: Record<string, unknown>;
           longTerm?: boolean;
+          scope?: "private" | "shared";
         };
 
         try {
           const runId = !longTerm && state.currentSessionId ? state.currentSessionId : undefined;
           const agentId = cfg.agentIsolation ? state.currentAgentId : undefined;
-          const addOpts = buildAddOptions(cfg, userId || undefined, runId, agentId);
+
+          // When scope is "shared" and agent isolation is enabled, write to pool_shared
+          const isSharedWrite = cfg.agentIsolation && scope === "shared";
+          const effectiveUserId = isSharedWrite ? Namespace.SHARED : (userId || undefined);
+          const addOpts = buildAddOptions(cfg, effectiveUserId, runId, isSharedWrite ? undefined : agentId);
 
           api.logger.info(
             `openclaw-mem0-plugin: memory_store: userId=${addOpts.user_id}, runId=${runId}, content=${text}`,

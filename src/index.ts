@@ -21,6 +21,7 @@ import { createProvider } from "./providers/index.js";
 import { registerTools } from "./tools/index.js";
 import { registerHooks } from "./hooks.js";
 import { registerCli } from "./cli.js";
+import { loadSystemMemory } from "./system-memory.js";
 
 const memoryPlugin = {
   id: "openclaw-mem0-plugin",
@@ -36,7 +37,7 @@ const memoryPlugin = {
     const state: PluginState = {};
 
     api.logger.info(
-      `openclaw-mem0-plugin: registered (mode: ${cfg.mode}, user: ${cfg.userId}, graph: ${cfg.enableGraph}, autoRecall: ${cfg.autoRecall}, autoCapture: ${cfg.autoCapture}, agentIsolation: ${cfg.agentIsolation})`,
+      `openclaw-mem0-plugin: registered (mode: ${cfg.mode}, user: ${cfg.userId}, graph: ${cfg.enableGraph}, autoRecall: ${cfg.autoRecall}, autoCapture: ${cfg.autoCapture}, agentIsolation: ${cfg.agentIsolation}, systemMemoryFile: ${cfg.systemMemoryFile ?? "none"})`,
     );
 
     registerTools(api, cfg, provider, state);
@@ -45,10 +46,19 @@ const memoryPlugin = {
 
     api.registerService({
       id: "openclaw-mem0-plugin",
-      start: () => {
+      start: async () => {
         api.logger.info(
           `openclaw-mem0-plugin: initialized (mode: ${cfg.mode}, user: ${cfg.userId}, autoRecall: ${cfg.autoRecall}, autoCapture: ${cfg.autoCapture})`,
         );
+
+        // Load system memory file on startup (non-blocking — errors are logged, not thrown)
+        if (cfg.systemMemoryFile) {
+          loadSystemMemory(api, cfg, provider).catch((err) => {
+            api.logger.warn(
+              `openclaw-mem0-plugin: system memory load failed: ${String(err)}`,
+            );
+          });
+        }
       },
       stop: () => {
         api.logger.info("openclaw-mem0-plugin: stopped");

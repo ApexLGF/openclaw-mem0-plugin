@@ -79,6 +79,11 @@
     "agentIsolation": {
       "label": "Agent Isolation",
       "help": "Enable per-agent memory isolation. When enabled, each agent gets its own private memory namespace (agent_{id}_private) with access to a shared pool (pool_shared). Default: false (backwards compatible)."
+    },
+    "systemMemoryFile": {
+      "label": "System Memory File",
+      "placeholder": "./System_Memory.md",
+      "help": "Path to a Markdown file containing system-level knowledge. Contents are loaded into the system_knowledge memory layer on startup, accessible to all agents as read-only shared context (e.g. company rules, SOPs, domain knowledge)."
     }
   },
   "configSchema": {
@@ -137,6 +142,9 @@
       },
       "agentIsolation": {
         "type": "boolean"
+      },
+      "systemMemoryFile": {
+        "type": "string"
       },
       "oss": {
         "type": "object",

@@ -1,5 +1,5 @@
 import type { Mem0Config, AddOptions, SearchOptions } from "./types.js";
-import { NamespaceManager } from "./namespace.js";
+import { Namespace, NamespaceManager } from "./namespace.js";
 
 /** Convert Record<string, string> categories to the array format mem0ai expects */
 export function categoriesToArray(
@@ -74,8 +74,13 @@ export function buildSearchOptions(
 
   if (cfg.agentIsolation && agentId) {
     const ns = new NamespaceManager(cfg.userId);
-    return ns.getSearchUserIds(agentId).map(makeOpts);
+    return ns.getSearchUserIds(agentId, !!cfg.systemMemoryFile).map(makeOpts);
   }
 
-  return [makeOpts(cfg.userId)];
+  // No isolation — still include system_knowledge if systemMemoryFile is configured
+  const ids = [cfg.userId];
+  if (cfg.systemMemoryFile) {
+    ids.push(Namespace.SYSTEM);
+  }
+  return ids.map(makeOpts);
 }
